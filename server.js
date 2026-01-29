@@ -3,22 +3,39 @@ const { createServer } = require('node:http');
 const path = require('path');
 const { Server } = require('socket.io');
 
+
 const app = express();
 const server = createServer(app);
 const io = new Server(server);
 
 
+io.on('connection', (socket) => {
+  console.log('a user connected' ,socket.id); 
+  
+  socket.on('user-message', (msg) => { // Listen for 'user-message' event from client
+    
+    // send to all clients
+    //   io.emit('server-message', msg);  // Broadcast the message to all connected clients
+
+    // board cast to all except sender
+  socket.broadcast.emit('server-message',msg ); // Broadcast the message to all connected clients except the sender
+
+
+  });
+
+  // boardcast when a user disconnects
+
+
+});
+
 app.use(express.static(path.join(__dirname, 'public')));
 
+
 app.get('/', (req, res) => {
-  res.sendFile(
-    path.join(__dirname, 'public', 'index.html')
-  );
+  res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
 
-io.on('connection', (socket) => {
-  console.log('a user connected', socket.id);
-});
+
 
 server.listen(5000, () => {
   console.log('server running at http://localhost:5000');
