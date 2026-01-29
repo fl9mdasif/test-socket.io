@@ -15,17 +15,21 @@ io.on('connection', (socket) => {
   socket.on('user-message', (msg) => { // Listen for 'user-message' event from client
 
     // send to all clients
-    //   io.emit('server-message', msg);  // Broadcast the message to all connected clients
+      // io.emit('server-message', msg);  // Broadcast the message to all connected clients
 
     // board cast to all except sender
-  // socket.broadcast.emit('server-message',msg ); // Broadcast the message to all connected clients except the sender
+  socket.broadcast.emit('server-message',msg ); // Broadcast the message to all connected clients except the sender
 
-  socket.join('general-room'); // Join a room named 'general-room'
+  // socket.join('general-room'); // Join a room named 'general-room'
     
-    io.to('general-room').emit('server-message', msg); // Notify room members
-    // io.except('general-room').emit('server-message', msg); // Notify non-room members
+  //   io.to('general-room').emit('server-message', msg); // Notify room members
+  //   // io.except('general-room').emit('server-message', msg); // Notify non-room members
 
   });
+
+  socket.on('feedback', (data) => {
+    socket.broadcast.emit('feedback', data)
+  })
 
   // boardcast when a user disconnects
 
