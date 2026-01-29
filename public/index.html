@@ -16,6 +16,7 @@
     
     <input type="text" id="message" placeholder="write your message">
     <button id="sendBtn">Send</button>
+    <button id="toggle-btn">Disconnect</button>
 </body>
 
 <script src="/socket.io/socket.io.js"></script>
@@ -28,6 +29,20 @@
 
   const messagesList = document.getElementById('messagesList');
 
+
+  const toggleButton = document.getElementById('toggle-btn');
+
+  toggleButton.addEventListener('click', (e) => {
+    e.preventDefault();
+    if (socket.connected) {
+      toggleButton.innerText = 'Connect';
+      socket.disconnect();
+    } else {
+      toggleButton.innerText = 'Disconnect';
+      socket.connect();
+    }
+  });
+  
   socket.on('server-message', (msg) => {
       const li = document.createElement('li');
       li.textContent = msg;     
